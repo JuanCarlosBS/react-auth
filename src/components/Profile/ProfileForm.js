@@ -1,6 +1,34 @@
+import { useRef, useContext } from 'react'
+import { useHistory } from 'react-router-dom'
+
+import AuthContext from '../../store/auth-context'
 import classes from './ProfileForm.module.css';
 
 const ProfileForm = () => {
+  const history = useHistory()
+  const newPasswordInputRef = useRef()
+  const authCtx = useContext(AuthContext)
+
+  const submitHandler = event => {
+    event.preventDefault();
+
+    const enteredPassword = newPasswordInputRef.current.value
+    fetch('https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyBgPVPUHkyB_oYI85HlARDeQTKHmpmIXbc', {
+      method: 'POST',
+      body: JSON.stringify({
+        password: enteredPassword,
+        returnSecureToken: true,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer'
+      },
+    }).then((res) => {
+
+      history.replace('/')
+    })
+  }
+
   return (
     <form className={classes.form}>
       <div className={classes.control}>
